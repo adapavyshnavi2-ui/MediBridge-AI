@@ -1,8 +1,8 @@
 import requests
 import time
-import os
+import streamlit as st
 
-API_KEY = os.getenv("ANAKIN_API_KEY")
+API_KEY = st.secrets["ANAKIN_API_KEY"]
 
 
 
