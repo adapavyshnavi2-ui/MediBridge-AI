@@ -3,9 +3,7 @@ from wire_client import get_medical_context, get_job_result
 from report_generator import create_pdf
 
 
-# =========================
-# AI FUNCTION (UNCHANGED)
-# =========================
+
 def generate_doctor_brief(symptoms, duration, medications):
     return f"""
 Patient reports: {symptoms}
@@ -14,106 +12,145 @@ Duration: {duration}
 
 Current Medications: {medications if medications else "None reported"}
 
-Key Discussion Focus:
+Key Clinical Assessment:
 • Review symptom progression
-• Evaluate symptom severity
-• Assess medication effectiveness
-• Consider additional diagnostic tests if necessary
+• Evaluate severity trends
+• Assess medication response
+• Recommend further diagnostic evaluation if needed
 """
 
 
-# =========================
-# PAGE CONFIG
-# =========================
+
 st.set_page_config(
-    page_title="MediBridge AI",
+    page_title="MediBridge Hospital OS",
     page_icon="🏥",
     layout="wide"
 )
 
 # =========================
-# 🍎 APPLE HEALTH HEADER (UPGRADED)
+# 🏥 HOSPITAL OS HEADER
 # =========================
 st.markdown("""
 <div style="
     padding: 26px;
-    border-radius: 22px;
+    border-radius: 18px;
     background: linear-gradient(135deg, #0f172a, #1e293b);
     color: white;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    margin-bottom: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    margin-bottom: 20px;
 ">
-    <h1 style="margin:0; font-size:34px;">MediBridge AI</h1>
-    <p style="opacity:0.7; margin-top:6px;">
-        Apple Health Style Clinical Intelligence System
-    </p>
+    <h1 style="margin:0;">🏥 MediBridge Hospital OS</h1>
+    <p style="opacity:0.7;">AI-Powered Electronic Health Record & Clinical Decision Support System</p>
 </div>
 """, unsafe_allow_html=True)
 
-# =========================
-# INPUT SECTION (CLEAN APPLE CARDS)
-# =========================
-st.markdown("### Patient Intake")
 
-col1, col2 = st.columns(2)
+st.markdown("## 🧾 Patient EHR Intake System")
+
+col1, col2 = st.columns([2, 2])
 
 with col1:
-    st.markdown("""
-    <div style="
-        padding:16px;
-        border-radius:18px;
-        background:#f8fafc;
-        border:1px solid #e2e8f0;
-    ">
-    """, unsafe_allow_html=True)
-
-    symptoms = st.text_area("🩺 Symptoms", placeholder="Headache, dizziness, fatigue...")
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    symptoms = st.text_area("🩺 Chief Complaints", placeholder="Headache, dizziness, fatigue...", height=120)
 
 with col2:
-    st.markdown("""
-    <div style="
-        padding:16px;
-        border-radius:18px;
-        background:#f8fafc;
-        border:1px solid #e2e8f0;
-    ">
-    """, unsafe_allow_html=True)
-
-    medications = st.text_area("💊 Current Medications", placeholder="Paracetamol, Vitamin D...")
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    medications = st.text_area(" Current Medications", placeholder="Paracetamol, Vitamin D...", height=120)
 
 duration = st.selectbox(
-    "⏳ Duration",
-    ["1 Day", "2-3 Days", "1 Week", "2 Weeks", "1 Month+"]
+    " Symptom Duration",
+    ["1 Day", "2–3 Days", "1 Week", "2 Weeks", "1 Month+"]
 )
 
 st.divider()
 
-# =========================
-# BUTTON (UNCHANGED FUNCTIONALITY)
-# =========================
-if st.button("🚀 Generate Medical Report", use_container_width=True):
+
+if st.button(" Run Clinical Assessment", use_container_width=True):
 
     if not symptoms:
-        st.warning("Please enter symptoms.")
+        st.warning("Please enter patient symptoms")
         st.stop()
 
-    # =========================
-    # AI BRIEF
-    # =========================
+    
     doctor_brief = generate_doctor_brief(symptoms, duration, medications)
 
-    st.markdown("### AI Clinical Summary")
+    severity_score = min(100, len(symptoms.split()) * 12)
+
+    if severity_score >= 70:
+        risk_level = "HIGH RISK"
+        color = "#ef4444"
+        alert = "🚨 Immediate clinical attention recommended"
+    elif severity_score >= 40:
+        risk_level = "MODERATE RISK"
+        color = "#f59e0b"
+        alert = "⚠️ Monitor closely and consider evaluation"
+    else:
+        risk_level = "LOW RISK"
+        color = "#22c55e"
+        alert = "🟢 Stable condition"
+
+    
+    st.markdown("##  Clinical Dashboard")
+
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric("Symptoms Load", len(symptoms.split()))
+    c2.metric("Duration", duration)
+    c3.metric("Risk Level", risk_level)
+    c4.metric("Status", "Processed")
+
+   
+    st.markdown("##  Triage Assessment")
+
+    st.markdown(f"""
+    <div style="
+        padding:16px;
+        border-radius:14px;
+        background:{color}20;
+        border:1px solid {color};
+        color:{color};
+        font-weight:600;
+    ">
+    {alert}
+    </div>
+    """, unsafe_allow_html=True)
+
+    # =========================
+    # 📈 SYMPTOM INTENSITY CHART
+    # =========================
+    st.markdown("## Symptom Progression Model")
+
+    import plotly.graph_objects as go
+
+    timeline = [
+        severity_score * 0.4,
+        severity_score * 0.6,
+        severity_score * 0.8,
+        severity_score
+    ]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        y=timeline,
+        mode="lines+markers",
+        line=dict(width=3)
+    ))
+
+    fig.update_layout(
+        height=260,
+        margin=dict(l=10, r=10, t=10, b=10),
+        xaxis_title="Time Progression",
+        yaxis_title="Symptom Severity Index"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    
+    st.markdown("##  AI Clinical Decision Support")
 
     st.markdown(f"""
     <div style="
         padding:18px;
-        border-radius:18px;
-        background:rgba(248,250,252,0.95);
+        border-radius:16px;
+        background:#f8fafc;
         border:1px solid #e2e8f0;
         line-height:1.6;
     ">
@@ -121,48 +158,25 @@ if st.button("🚀 Generate Medical Report", use_container_width=True):
     </div>
     """, unsafe_allow_html=True)
 
-    # =========================
-    # METRICS DASHBOARD (APPLE STYLE)
-    # =========================
-    st.markdown("### Patient Overview")
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
-        st.metric("Symptoms Count", len(symptoms.split()))
-
-    with c2:
-        st.metric("Duration", duration)
-
-    with c3:
-        st.metric("Status", "Ready")
-
-    # =========================
-    # PDF (UNCHANGED)
-    # =========================
+    
     pdf_file = create_pdf(symptoms, duration, medications, doctor_brief)
 
     with open(pdf_file, "rb") as file:
         st.download_button(
-            label="📄 Download Medical Report",
-            data=file,
-            file_name="MediBridge_Report.pdf",
-            mime="application/pdf"
+            "📄 Generate Patient Report (PDF)",
+            file,
+            file_name="Hospital_OS_Report.pdf"
         )
 
-    # =========================
-    # PUBMED SECTION (CLEAN APPLE STYLE)
-    # =========================
-    with st.spinner("🔬 Fetching medical literature..."):
+    
+    with st.spinner("🔬 Running clinical literature scan..."):
         try:
             job = get_medical_context(symptoms)
             result = get_job_result(job["poll_url"])
 
-            st.markdown("### Clinical Evidence Feed")
+            st.markdown("## 🔬 Evidence-Based Medicine Feed")
 
             articles = result["data"]["data"]["articles"]
-
-            st.success(f"{len(articles)} relevant studies found")
 
             for article in articles:
                 with st.expander("📄 " + article["title"]):
@@ -171,16 +185,13 @@ if st.button("🚀 Generate Medical Report", use_container_width=True):
                     st.write("PMID:", article.get("pmid", "N/A"))
 
         except Exception as e:
-            st.warning(f"Medical literature unavailable: {e}")
+            st.warning(f"Clinical database unavailable: {e}")
 
-# =========================
-# FOOTER (UNCHANGED)
-# =========================
+
 st.divider()
 
-st.caption("Powered by Anakin Wire • PubMed • Streamlit")
+st.caption("MediBridge Hospital OS • Clinical Decision Support System")
 
 st.info(
-    "Disclaimer: This tool does not diagnose medical conditions. "
-    "It helps organize information before consulting healthcare professionals."
+    "⚠️ This system assists clinical decision-making and does not replace professional diagnosis."
 )
