@@ -32,27 +32,27 @@ st.set_page_config(
 )
 
 # =========================
-# 🍎 APPLE HEALTH PRO HEADER
+# 🍎 APPLE HEALTH HEADER (UPGRADED)
 # =========================
 st.markdown("""
 <div style="
-    padding: 28px;
-    border-radius: 24px;
+    padding: 26px;
+    border-radius: 22px;
     background: linear-gradient(135deg, #0f172a, #1e293b);
     color: white;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-    margin-bottom: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    margin-bottom: 18px;
 ">
     <h1 style="margin:0; font-size:34px;">MediBridge AI</h1>
     <p style="opacity:0.7; margin-top:6px;">
-        iOS Health Pro Medical Intelligence Dashboard
+        Apple Health Style Clinical Intelligence System
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 # =========================
-# INPUT SECTION (APPLE CARDS)
+# INPUT SECTION (CLEAN APPLE CARDS)
 # =========================
 st.markdown("### Patient Intake")
 
@@ -61,8 +61,8 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("""
     <div style="
-        padding:18px;
-        border-radius:20px;
+        padding:16px;
+        border-radius:18px;
         background:#f8fafc;
         border:1px solid #e2e8f0;
     ">
@@ -75,14 +75,14 @@ with col1:
 with col2:
     st.markdown("""
     <div style="
-        padding:18px;
-        border-radius:20px;
+        padding:16px;
+        border-radius:18px;
         background:#f8fafc;
         border:1px solid #e2e8f0;
     ">
     """, unsafe_allow_html=True)
 
-    medications = st.text_area("💊 Medications", placeholder="Paracetamol, Vitamin D...")
+    medications = st.text_area("💊 Current Medications", placeholder="Paracetamol, Vitamin D...")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -94,9 +94,9 @@ duration = st.selectbox(
 st.divider()
 
 # =========================
-# ACTION BUTTON
+# BUTTON (UNCHANGED FUNCTIONALITY)
 # =========================
-if st.button("Generate Clinical Report", use_container_width=True):
+if st.button("🚀 Generate Medical Report", use_container_width=True):
 
     if not symptoms:
         st.warning("Please enter symptoms.")
@@ -112,8 +112,8 @@ if st.button("Generate Clinical Report", use_container_width=True):
     st.markdown(f"""
     <div style="
         padding:18px;
-        border-radius:20px;
-        background:rgba(248,250,252,0.9);
+        border-radius:18px;
+        background:rgba(248,250,252,0.95);
         border:1px solid #e2e8f0;
         line-height:1.6;
     ">
@@ -122,68 +122,38 @@ if st.button("Generate Clinical Report", use_container_width=True):
     """, unsafe_allow_html=True)
 
     # =========================
-    # METRIC DASHBOARD (APPLE STYLE)
+    # METRICS DASHBOARD (APPLE STYLE)
     # =========================
     st.markdown("### Patient Overview")
 
     c1, c2, c3 = st.columns(3)
 
-    c1.markdown(f"""
-    <div style="
-        padding:18px;
-        border-radius:18px;
-        background:white;
-        border:1px solid #e2e8f0;
-        text-align:center;
-    ">
-        <h4>Symptoms</h4>
-        <h2>{len(symptoms.split())}</h2>
-    </div>
-    """, unsafe_allow_html=True)
+    with c1:
+        st.metric("Symptoms Count", len(symptoms.split()))
 
-    c2.markdown(f"""
-    <div style="
-        padding:18px;
-        border-radius:18px;
-        background:white;
-        border:1px solid #e2e8f0;
-        text-align:center;
-    ">
-        <h4>Duration</h4>
-        <h3>{duration}</h3>
-    </div>
-    """, unsafe_allow_html=True)
+    with c2:
+        st.metric("Duration", duration)
 
-    c3.markdown("""
-    <div style="
-        padding:18px;
-        border-radius:18px;
-        background:white;
-        border:1px solid #e2e8f0;
-        text-align:center;
-    ">
-        <h4>Status</h4>
-        <h3 style="color:#22c55e;">Ready</h3>
-    </div>
-    """, unsafe_allow_html=True)
+    with c3:
+        st.metric("Status", "Ready")
 
     # =========================
-    # PDF GENERATION (UNCHANGED)
+    # PDF (UNCHANGED)
     # =========================
     pdf_file = create_pdf(symptoms, duration, medications, doctor_brief)
 
     with open(pdf_file, "rb") as file:
         st.download_button(
-            label="Download iOS Health Report",
+            label="📄 Download Medical Report",
             data=file,
             file_name="MediBridge_Report.pdf",
             mime="application/pdf"
         )
 
     # =========================
-    # PUBMED SECTION (CLEAN CARDS)
+    # PUBMED SECTION (CLEAN APPLE STYLE)
     # =========================
-    with st.spinner("Fetching medical literature..."):
+    with st.spinner("🔬 Fetching medical literature..."):
         try:
             job = get_medical_context(symptoms)
             result = get_job_result(job["poll_url"])
@@ -195,21 +165,22 @@ if st.button("Generate Clinical Report", use_container_width=True):
             st.success(f"{len(articles)} relevant studies found")
 
             for article in articles:
-                with st.expander(f"📄 {article['title']}"):
-                    st.write("**Journal:**", article.get("journal", "N/A"))
-                    st.write("**Published:**", article.get("pub_date", "N/A"))
-                    st.write("**PMID:**", article.get("pmid", "N/A"))
+                with st.expander("📄 " + article["title"]):
+                    st.write("Journal:", article.get("journal", "N/A"))
+                    st.write("Published:", article.get("pub_date", "N/A"))
+                    st.write("PMID:", article.get("pmid", "N/A"))
 
         except Exception as e:
             st.warning(f"Medical literature unavailable: {e}")
 
 # =========================
-# FOOTER
+# FOOTER (UNCHANGED)
 # =========================
 st.divider()
 
 st.caption("Powered by Anakin Wire • PubMed • Streamlit")
 
 st.info(
-    "Disclaimer: This tool assists in organizing medical information and does not provide diagnosis."
+    "Disclaimer: This tool does not diagnose medical conditions. "
+    "It helps organize information before consulting healthcare professionals."
 )
