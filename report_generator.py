@@ -1,6 +1,6 @@
 from fpdf import FPDF
 
-def create_pdf(symptoms, duration, medications):
+def create_pdf(symptoms, duration, medications, doctor_brief):
     pdf = FPDF()
     pdf.add_page()
 
@@ -21,6 +21,19 @@ def create_pdf(symptoms, duration, medications):
         10,
         "This report is intended to help patients prepare for doctor consultations."
     )
+    pdf.ln(5)
+
+pdf.multi_cell(
+    0,
+    10,
+    "AI Doctor Brief"
+)
+
+pdf.multi_cell(
+    0,
+    10,
+    doctor_brief
+)
 
     pdf.output("medical_report.pdf")
 
