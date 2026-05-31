@@ -1,6 +1,7 @@
 import streamlit as st
 from wire_client import get_medical_context
 from wire_client import get_job_result
+from report_generator import create_pdf
 
 st.set_page_config(
 page_title="MediBridge AI",
@@ -82,9 +83,23 @@ duration = st.selectbox(
     ]
 )
 if st.button("🚀 Generate Medical Report", use_container_width=True):
+    
     if not symptoms:
         st.warning("Please enter symptoms.")
         st.stop()
+pdf_file = create_pdf(
+    symptoms,
+    duration,
+    medications
+)
+
+with open(pdf_file, "rb") as file:
+    st.download_button(
+        label="📄 Download PDF Report",
+        data=file,
+        file_name="MediBridge_Report.pdf",
+        mime="application/pdf"
+    )
 
 with st.spinner("Searching medical literature using Anakin Wire..."):
 
