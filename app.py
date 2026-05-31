@@ -186,7 +186,7 @@ if st.button(" Run Clinical Assessment", use_container_width=True):
 
 st.divider()
 
-st.caption("MediBridge Hospital OS • Clinical Decision Support System")
+st.caption("MediBridge Hospital OS • Clinical Decision Support System.Anakin API")
 
 st.info(
     "⚠️ This system assists clinical decision-making and does not replace professional diagnosis."
