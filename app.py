@@ -27,9 +27,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# =========================
-# 🏥 HOSPITAL OS HEADER
-# =========================
+
 st.markdown("""
 <div style="
     padding: 26px;
@@ -39,7 +37,7 @@ st.markdown("""
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
     margin-bottom: 20px;
 ">
-    <h1 style="margin:0;">🏥 MediBridge Hospital OS</h1>
+    <h1 style="margin:0;"> MediBridge Hospital OS</h1>
     <p style="opacity:0.7;">AI-Powered Electronic Health Record & Clinical Decision Support System</p>
 </div>
 """, unsafe_allow_html=True)
@@ -113,9 +111,7 @@ if st.button(" Run Clinical Assessment", use_container_width=True):
     </div>
     """, unsafe_allow_html=True)
 
-    # =========================
-    # 📈 SYMPTOM INTENSITY CHART
-    # =========================
+   
     st.markdown("## Symptom Progression Model")
 
     import plotly.graph_objects as go
