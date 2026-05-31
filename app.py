@@ -106,7 +106,8 @@ if st.button("🚀 Generate Medical Report", use_container_width=True):
 pdf_file = create_pdf(
     symptoms,
     duration,
-    medications
+    medications,
+    doctor_brief
 )
 
 with open(pdf_file, "rb") as file:
@@ -137,6 +138,19 @@ with st.spinner("Searching medical literature using Anakin Wire..."):
 
         with c3:
             st.metric("Status", "Ready")
+        doctor_brief = generate_doctor_brief(
+    symptoms,
+    duration,
+    medications
+)
+
+st.markdown("## 🤖 AI Doctor Brief")
+
+st.text_area(
+    "Doctor Brief",
+    doctor_brief,
+    height=180
+)
 
         st.markdown("### 📄 Patient Summary")
 
