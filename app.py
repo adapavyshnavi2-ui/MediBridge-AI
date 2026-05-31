@@ -143,13 +143,12 @@ with st.spinner("Searching medical literature using Anakin Wire..."):
     duration,
     medications
 )
+        st.markdown("## 🤖 AI Doctor Brief")
 
-st.markdown("## 🤖 AI Doctor Brief")
-
-st.text_area(
-    "Doctor Brief",
-    doctor_brief,
-    height=180
+        st.text_area(
+        "Doctor Brief",
+        doctor_brief,
+        height=180
 )
 
         st.markdown("### 📄 Patient Summary")
