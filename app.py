@@ -1,3 +1,19 @@
+def generate_doctor_brief(symptoms, duration, medications):
+    brief = f"""
+Patient reports: {symptoms}
+
+Duration: {duration}
+
+Current Medications: {medications if medications else "None reported"}
+
+Key Discussion Focus:
+• Review symptom progression
+• Evaluate symptom severity
+• Assess medication effectiveness
+• Consider additional diagnostic tests if necessary
+"""
+
+    return brief
 import streamlit as st
 from wire_client import get_medical_context
 from wire_client import get_job_result
