@@ -4,7 +4,7 @@ from report_generator import create_pdf
 
 
 # =========================
-# AI FUNCTION
+# AI FUNCTION (UNCHANGED)
 # =========================
 def generate_doctor_brief(symptoms, duration, medications):
     return f"""
@@ -32,104 +32,184 @@ st.set_page_config(
 )
 
 # =========================
-# HERO UI (UNCHANGED)
+# 🍎 APPLE HEALTH PRO HEADER
 # =========================
 st.markdown("""
-<div class="hero">
-    <h1>🏥 MediBridge AI</h1>
-    <p>AI-Powered Doctor Visit Preparation Assistant</p>
-    <p>Powered by Anakin Wire + PubMed</p>
+<div style="
+    padding: 28px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    margin-bottom: 20px;
+">
+    <h1 style="margin:0; font-size:34px;">MediBridge AI</h1>
+    <p style="opacity:0.7; margin-top:6px;">
+        iOS Health Pro Medical Intelligence Dashboard
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
-st.divider()
+# =========================
+# INPUT SECTION (APPLE CARDS)
+# =========================
+st.markdown("### Patient Intake")
 
-# =========================
-# INPUT UI
-# =========================
 col1, col2 = st.columns(2)
 
 with col1:
+    st.markdown("""
+    <div style="
+        padding:18px;
+        border-radius:20px;
+        background:#f8fafc;
+        border:1px solid #e2e8f0;
+    ">
+    """, unsafe_allow_html=True)
+
     symptoms = st.text_area("🩺 Symptoms", placeholder="Headache, dizziness, fatigue...")
 
+    st.markdown("</div>", unsafe_allow_html=True)
+
 with col2:
-    medications = st.text_area("💊 Current Medications", placeholder="Paracetamol, Vitamin D...")
+    st.markdown("""
+    <div style="
+        padding:18px;
+        border-radius:20px;
+        background:#f8fafc;
+        border:1px solid #e2e8f0;
+    ">
+    """, unsafe_allow_html=True)
+
+    medications = st.text_area("💊 Medications", placeholder="Paracetamol, Vitamin D...")
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 duration = st.selectbox(
     "⏳ Duration",
     ["1 Day", "2-3 Days", "1 Week", "2 Weeks", "1 Month+"]
 )
 
+st.divider()
+
 # =========================
-# BUTTON LOGIC (FIXED FLOW)
+# ACTION BUTTON
 # =========================
-if st.button("🚀 Generate Medical Report", use_container_width=True):
+if st.button("Generate Clinical Report", use_container_width=True):
 
     if not symptoms:
         st.warning("Please enter symptoms.")
         st.stop()
 
-    # STEP 1: AI BRIEF (MOVED UP → FIXED CRASH)
+    # =========================
+    # AI BRIEF
+    # =========================
     doctor_brief = generate_doctor_brief(symptoms, duration, medications)
 
-    # STEP 2: SHOW UI IMMEDIATELY
-    st.markdown("## 🤖 AI Doctor Brief")
-    st.text_area("Doctor Brief", doctor_brief, height=180)
+    st.markdown("### AI Clinical Summary")
 
-    # STEP 3: METRICS
-    st.markdown("## 📋 Patient Summary")
+    st.markdown(f"""
+    <div style="
+        padding:18px;
+        border-radius:20px;
+        background:rgba(248,250,252,0.9);
+        border:1px solid #e2e8f0;
+        line-height:1.6;
+    ">
+    {doctor_brief}
+    </div>
+    """, unsafe_allow_html=True)
+
+    # =========================
+    # METRIC DASHBOARD (APPLE STYLE)
+    # =========================
+    st.markdown("### Patient Overview")
 
     c1, c2, c3 = st.columns(3)
 
-    with c1:
-        st.metric("Symptoms Entered", len(symptoms.split()))
+    c1.markdown(f"""
+    <div style="
+        padding:18px;
+        border-radius:18px;
+        background:white;
+        border:1px solid #e2e8f0;
+        text-align:center;
+    ">
+        <h4>Symptoms</h4>
+        <h2>{len(symptoms.split())}</h2>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with c2:
-        st.metric("Duration", duration)
+    c2.markdown(f"""
+    <div style="
+        padding:18px;
+        border-radius:18px;
+        background:white;
+        border:1px solid #e2e8f0;
+        text-align:center;
+    ">
+        <h4>Duration</h4>
+        <h3>{duration}</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with c3:
-        st.metric("Status", "Ready")
+    c3.markdown("""
+    <div style="
+        padding:18px;
+        border-radius:18px;
+        background:white;
+        border:1px solid #e2e8f0;
+        text-align:center;
+    ">
+        <h4>Status</h4>
+        <h3 style="color:#22c55e;">Ready</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # STEP 4: PDF GENERATION (NOW SAFE)
+    # =========================
+    # PDF GENERATION (UNCHANGED)
+    # =========================
     pdf_file = create_pdf(symptoms, duration, medications, doctor_brief)
 
     with open(pdf_file, "rb") as file:
         st.download_button(
-            label="📄 Download PDF Report",
+            label="Download iOS Health Report",
             data=file,
             file_name="MediBridge_Report.pdf",
             mime="application/pdf"
         )
 
-    # STEP 5: LOADING + PUBMED (INSIDE BUTTON FLOW)
-    with st.spinner("🔬 Searching medical literature using Anakin Wire..."):
+    # =========================
+    # PUBMED SECTION (CLEAN CARDS)
+    # =========================
+    with st.spinner("Fetching medical literature..."):
         try:
             job = get_medical_context(symptoms)
             result = get_job_result(job["poll_url"])
 
-            st.success("Medical literature retrieved successfully!")
-
-            st.markdown("## 🔬 Medical Literature")
+            st.markdown("### Clinical Evidence Feed")
 
             articles = result["data"]["data"]["articles"]
 
-            st.success(f"Found {len(articles)} relevant PubMed articles")
+            st.success(f"{len(articles)} relevant studies found")
 
             for article in articles:
-                with st.expander(article["title"]):
+                with st.expander(f"📄 {article['title']}"):
                     st.write("**Journal:**", article.get("journal", "N/A"))
                     st.write("**Published:**", article.get("pub_date", "N/A"))
                     st.write("**PMID:**", article.get("pmid", "N/A"))
 
         except Exception as e:
-            st.warning(f"No articles found or error occurred: {e}")
+            st.warning(f"Medical literature unavailable: {e}")
 
-    # STEP 6: FOOTER
-    st.divider()
+# =========================
+# FOOTER
+# =========================
+st.divider()
 
-    st.caption("Powered by Anakin Wire • PubMed • Streamlit")
+st.caption("Powered by Anakin Wire • PubMed • Streamlit")
 
-    st.info(
-        "Disclaimer: This tool does not diagnose medical conditions. "
-        "It helps organize information before consulting healthcare professionals."
-    )
+st.info(
+    "Disclaimer: This tool assists in organizing medical information and does not provide diagnosis."
+)
