@@ -1,7 +1,10 @@
 import requests
 import time
+import os
 
-API_KEY = "ask_6271484dd58a4e62b87edeaf2d380b35088c2121ee7acb5bcc8eabcc7dbfe77d"
+API_KEY = os.getenv("ANAKIN_API_KEY")
+
+
 
 def get_medical_context(symptoms):
 
