@@ -90,7 +90,6 @@ with st.spinner("Searching medical literature using Anakin Wire..."):
 
     try:
         job = get_medical_context(symptoms)
-        st.write("DEBUG:", job)
         result = get_job_result(job["poll_url"])
 
         st.success("✅ Medical literature retrieved successfully!")
