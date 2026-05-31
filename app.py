@@ -22,7 +22,7 @@ Key Clinical Assessment:
 
 
 st.set_page_config(
-    page_title="MediBridge Hospital OS",
+    page_title="MediBridge-AI",
     page_icon="🏥",
     layout="wide"
 )
